@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.rafaelcortez.cursospringboot.domain.Produto;
 
 @Repository
-public interface ProdutoRepositiry extends JpaRepository<Produto, Integer> {
+public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
 
 }

@@ -6,14 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rafaelcortez.cursospringboot.domain.Cliente;
-import com.rafaelcortez.cursospringboot.repositories.ClienteRepositiry;
+import com.rafaelcortez.cursospringboot.repositories.ClienteRepository;
 import com.rafaelcortez.cursospringboot.services.exceptions.ObjectNotFoundException;
 
 @Service
 public class ClienteService {
 	
 	@Autowired
-	private ClienteRepositiry repo;
+	private ClienteRepository repo;
 	
 	public Cliente find(Integer id){
 		

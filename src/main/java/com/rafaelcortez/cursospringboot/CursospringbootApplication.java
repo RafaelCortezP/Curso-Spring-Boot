@@ -1,5 +1,6 @@
 package com.rafaelcortez.cursospringboot;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,35 +13,48 @@ import com.rafaelcortez.cursospringboot.domain.Cidade;
 import com.rafaelcortez.cursospringboot.domain.Cliente;
 import com.rafaelcortez.cursospringboot.domain.Endereco;
 import com.rafaelcortez.cursospringboot.domain.Estado;
+import com.rafaelcortez.cursospringboot.domain.Pagamento;
+import com.rafaelcortez.cursospringboot.domain.PagamentoComBoleto;
+import com.rafaelcortez.cursospringboot.domain.PagamentoComCartao;
+import com.rafaelcortez.cursospringboot.domain.Pedido;
 import com.rafaelcortez.cursospringboot.domain.Produto;
+import com.rafaelcortez.cursospringboot.domain.enums.EstadoPagamento;
 import com.rafaelcortez.cursospringboot.domain.enums.TipoCliente;
-import com.rafaelcortez.cursospringboot.repositories.CategoriaRepositiry;
-import com.rafaelcortez.cursospringboot.repositories.CidadeRepositiry;
-import com.rafaelcortez.cursospringboot.repositories.ClienteRepositiry;
-import com.rafaelcortez.cursospringboot.repositories.EnderecoRepositiry;
-import com.rafaelcortez.cursospringboot.repositories.EstadoRepositiry;
-import com.rafaelcortez.cursospringboot.repositories.ProdutoRepositiry;
+import com.rafaelcortez.cursospringboot.repositories.CategoriaRepository;
+import com.rafaelcortez.cursospringboot.repositories.CidadeRepository;
+import com.rafaelcortez.cursospringboot.repositories.ClienteRepository;
+import com.rafaelcortez.cursospringboot.repositories.EnderecoRepository;
+import com.rafaelcortez.cursospringboot.repositories.EstadoRepository;
+import com.rafaelcortez.cursospringboot.repositories.PagamentoRepository;
+import com.rafaelcortez.cursospringboot.repositories.PedidoRepository;
+import com.rafaelcortez.cursospringboot.repositories.ProdutoRepository;
 
 @SpringBootApplication
 public class CursospringbootApplication implements CommandLineRunner {
 	
 	@Autowired
-	private CategoriaRepositiry categoriaRepository;
+	private CategoriaRepository categoriaRepository;
 	
 	@Autowired
-	private ProdutoRepositiry produtoRepository;
+	private ProdutoRepository produtoRepository;
 	
 	@Autowired
-	private CidadeRepositiry cidadeRepository;
+	private CidadeRepository cidadeRepository;
 	
 	@Autowired
-	private EstadoRepositiry estadoRepository;
+	private EstadoRepository estadoRepository;
 	
 	@Autowired
-	private ClienteRepositiry clienteRepository;
+	private ClienteRepository clienteRepository;
 	
 	@Autowired
-	private EnderecoRepositiry enderecoRepository;
+	private EnderecoRepository enderecoRepository;
+	
+	@Autowired
+	private PedidoRepository pedidoRepository;
+	
+	@Autowired
+	private PagamentoRepository pagamentoRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CursospringbootApplication.class, args);
@@ -90,6 +104,22 @@ public class CursospringbootApplication implements CommandLineRunner {
 		
 		clienteRepository.saveAll(Arrays.asList(cli1));
 		enderecoRepository.saveAll(Arrays.asList(e1, e2));
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		
+		Pedido ped1 = new Pedido(null, sdf.parse("30/09/2020 10:32"), cli1, e1);
+		Pedido ped2 = new Pedido(null, sdf.parse("10/10/2020 19:35"), cli1, e2);
+		
+		Pagamento pagto1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, ped1, 6);
+		ped1.setPagamento(pagto1);
+		
+		Pagamento pagto2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped2, sdf.parse("20/10/2020 23:59"), null);
+		ped2.setPagamento(pagto2);
+		
+		cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));
+		
+		pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
+		pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2));
 		
 	}
 
