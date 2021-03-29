@@ -29,10 +29,5 @@ public class TestConfig {
 	public EmailService emailService() {
 		return new MockEmailService();
 	}
-	
-	@Bean
-	public BCryptPasswordEncoder bCryptPasswordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
 
 }
