@@ -12,14 +12,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.rafaelcortez.cursospringboot.domain.Cidade;
 import com.rafaelcortez.cursospringboot.domain.Cliente;
 import com.rafaelcortez.cursospringboot.domain.Endereco;
+import com.rafaelcortez.cursospringboot.domain.enums.Perfil;
 import com.rafaelcortez.cursospringboot.domain.enums.TipoCliente;
 import com.rafaelcortez.cursospringboot.dto.ClienteDTO;
 import com.rafaelcortez.cursospringboot.dto.ClienteNewDTO;
 import com.rafaelcortez.cursospringboot.repositories.ClienteRepository;
 import com.rafaelcortez.cursospringboot.repositories.EnderecoRepository;
+import com.rafaelcortez.cursospringboot.security.UserSS;
+import com.rafaelcortez.cursospringboot.services.exceptions.AuthorizationException;
 import com.rafaelcortez.cursospringboot.services.exceptions.DataIntegrityException;
 import com.rafaelcortez.cursospringboot.services.exceptions.ObjectNotFoundException;
 
@@ -36,6 +40,11 @@ public class ClienteService {
 	private BCryptPasswordEncoder pe;
 	
 	public Cliente find(Integer id){
+		
+		UserSS user = UserService.authenticated();
+		if(user == null  || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
+			throw new AuthorizationException("Acesso negado");
+		}
 		
 		Optional<Cliente> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException( 
