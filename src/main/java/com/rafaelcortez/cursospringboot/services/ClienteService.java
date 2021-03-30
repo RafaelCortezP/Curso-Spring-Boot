@@ -12,7 +12,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.rafaelcortez.cursospringboot.domain.Cidade;
 import com.rafaelcortez.cursospringboot.domain.Cliente;
 import com.rafaelcortez.cursospringboot.domain.Endereco;
